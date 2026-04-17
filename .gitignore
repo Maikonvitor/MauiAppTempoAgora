@@ -4,6 +4,8 @@
 **/obj/
 **/Debug/
 **/Release/
+**/x64/
+**/x86/
 
 # User-specific files
 **/*.user
@@ -11,37 +13,34 @@
 **/*.suo
 **/*.userprefs
 
-# IDE - VSCode
-.vscode/
+# Visual Studio files
+**/TestResults/
+**/BundleArtifacts/
+**/AppPackages/
+**/*.pkgdef
+**/*.pkgundef
 
-# IDE - Visual Studio
-**/[Vv]isual[Ss]tudio[Dd]ebugger/
-**/DebugPS/
-**/ReleasePS/
-**/x64/
-**/x86/
-**/bld/
-**/Bin/
-**/Obj/
+# MAUI specific
+**/Platforms/Android/bin/
+**/Platforms/Android/obj/
+**/Platforms/iOS/bin/
+**/Platforms/iOS/obj/
+**/Platforms/MacCatalyst/bin/
+**/Platforms/MacCatalyst/obj/
+**/Platforms/Tizen/bin/
+**/Platforms/Tizen/obj/
+**/Platforms/Windows/bin/
+**/Platforms/Windows/obj/
 
-# OS generated files
-.DS_Store
-Thumbs.db
+# Environment
+.env
+.env.local
+*.env.*
 
 # Logs
 *.log
 
-# Environment specific settings
-.env
-.env.local
-*.env*
-
-# Local DB files
-*.db
-*.db-shm
-*.db-wal
-
-# Package manager
-**/packages/
-**/node_modules/
+# OS generated files
+.DS_Store
+Thumbs.db
 ```
