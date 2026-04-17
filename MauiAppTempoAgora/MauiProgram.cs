@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
+using MauiAppTempoAgora.Services;
 
 namespace MauiAppTempoAgora
 {
@@ -15,8 +16,12 @@ namespace MauiAppTempoAgora
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
+            // Register HttpClient and WeatherService
+            builder.Services.AddSingleton<HttpClient>();
+            builder.Services.AddSingleton<IWeatherService, WeatherService>();
+
 #if DEBUG
-    		builder.Logging.AddDebug();
+            builder.Logging.AddDebug();
 #endif
 
             return builder.Build();

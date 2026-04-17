@@ -8,10 +8,20 @@
             Padding="30,0"
             Spacing="25">
 
-            <Entry x:Name="txt_cidade" />
-            <Button Text="Buscar" Clicked="Button_Clicked" />
+            <Label Text="Weather Forecast" 
+                   FontSize="Large"
+                   HorizontalOptions="Center" />
 
-            <Label x:Name="lbl_res" />
+            <Entry x:Name="txt_cidade" 
+                   Placeholder="Enter city name"
+                   Keyboard="Text" />
+            
+            <Button Text="Search" 
+                    Clicked="OnSearchClicked"
+                    HorizontalOptions="Center" />
+
+            <Label x:Name="lbl_res" 
+                   LineBreakMode="WordWrap"/>
 
         </VerticalStackLayout>
     </ScrollView>

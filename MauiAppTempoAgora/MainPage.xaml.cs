@@ -5,62 +5,59 @@ namespace MauiAppTempoAgora
 {
     public partial class MainPage : ContentPage
     {
-        int count = 0;
+        private readonly IWeatherService _weatherService;
 
-        public MainPage()
+        public MainPage(IWeatherService weatherService)
         {
             InitializeComponent();
+            _weatherService = weatherService;
         }
 
-        private async void Button_Clicked(object sender, EventArgs e)
+        private async void OnSearchClicked(object sender, EventArgs e)
         {
             try
             {
                 if (Connectivity.Current.NetworkAccess != NetworkAccess.Internet)
                 {
-                    await DisplayAlert("Sem conexão", "Você está sem conexão com a internet.", "OK");
+                    await DisplayAlert("No Connection", "You are not connected to the internet.", "OK");
                     return;
                 }
 
-                if(!string.IsNullOrEmpty(txt_cidade.Text))
+                var city = txt_cidade.Text?.Trim();
+
+                if (string.IsNullOrEmpty(city))
                 {
-                    Tempo? t = await DataService.GetPrevisao(txt_cidade.Text);
-
-                    if(t != null) 
-                    {
-                        string dados_previsao = "";
-
-                        dados_previsao = $"Latitude: {t.lat} \n" +
-                                         $"Longitude: {t.lon} \n" +
-                                         $"Descrição: {t.description} \n" +
-                                         $"Nascer do Sol: {t.sunrise} \n" +
-                                         $"Por do Sol: {t.sunset} \n" +
-                                         $"Temp Máx: {t.temp_max} \n" +
-                                         $"Temp Min: {t.temp_min} \n" +
-                                         $"Vento: {t.speed} m/s \n" +
-                                         $"Visibilidade: {t.visibility} m\n";
-
-                        lbl_res.Text = dados_previsao;
-
-                    } else
-                    {
-
-                        lbl_res.Text = "Sem dados de Previsão";
-                    }
-
-                } else
-                {
-                    lbl_res.Text = "Preencha a cidade.";
+                    lbl_res.Text = "Please enter a city name.";
+                    return;
                 }
 
-            } catch (InvalidOperationException ex)
+                var forecast = await _weatherService.GetForecastAsync(city);
+
+                if (forecast != null)
+                {
+                    lbl_res.Text = $"Latitude: {forecast.Latitude}\n" +
+                                   $"Longitude: {forecast.Longitude}\n" +
+                                   $"Description: {forecast.Description}\n" +
+                                   $"Sunrise: {forecast.Sunrise}\n" +
+                                   $"Sunset: {forecast.Sunset}\n" +
+                                   $"Max Temp: {forecast.TempMax}°C\n" +
+                                   $"Min Temp: {forecast.TempMin}°C\n" +
+                                   $"Wind: {forecast.WindSpeed} m/s\n" +
+                                   $"Visibility: {forecast.Visibility} m";
+                }
+                else
+                {
+                    lbl_res.Text = "No forecast data available.";
+                }
+            }
+            catch (InvalidOperationException ex)
             {
                 lbl_res.Text = ex.Message;
-            } catch(Exception ex)
+            }
+            catch (Exception ex)
             {
-                await DisplayAlert("Ops", ex.Message, "OK");
+                await DisplayAlert("Error", ex.Message, "OK");
             }
         }
     }
-
 }
