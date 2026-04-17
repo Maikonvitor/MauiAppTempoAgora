@@ -1,29 +1,173 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="MauiAppTempoAgora.MainPage">
+             x:Class="MauiAppTempoAgora.MainPage"
+             Title="Weather Forecast">
 
-    <ScrollView>
-        <VerticalStackLayout
-            Padding="30,0"
-            Spacing="25">
+    <ContentPage.Resources>
+        <DataTemplate x:Key="CityChipTemplate">
+            <Button Text="{Binding .}"
+                    BackgroundColor="#4A90E2"
+                    TextColor="White"
+                    CornerRadius="20"
+                    Padding="15,8"
+                    Margin="5"
+                    HeightRequest="35"
+                    Clicked="OnChipClicked" />
+        </DataTemplate>
+    </ContentPage.Resources>
 
-            <Label Text="Weather Forecast" 
-                   FontSize="Large"
-                   HorizontalOptions="Center" />
+    <RefreshView IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshCommand}">
+        <ScrollView>
+            <VerticalStackLayout Padding="20" Spacing="20">
 
-            <Entry x:Name="txt_cidade" 
-                   Placeholder="Enter city name"
-                   Keyboard="Text" />
-            
-            <Button Text="Search" 
-                    Clicked="OnSearchClicked"
-                    HorizontalOptions="Center" />
+                <!-- Header com localização atual -->
+                <Frame BackgroundColor="#4A90E2" CornerRadius="15" Padding="20" HasShadow="True">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="🌤️ Weather Forecast" 
+                               FontSize="28" 
+                               FontAttributes="Bold"
+                               HorizontalOptions="Center"
+                               TextColor="White" />
+                        
+                        <Button x:Name="btnCurrentLocation"
+                                Text="📍 Use My Location"
+                                Clicked="OnCurrentLocationClicked"
+                                BackgroundColor="White"
+                                TextColor="#4A90E2"
+                                CornerRadius="10"
+                                HorizontalOptions="FillAndExpand" />
+                    </VerticalStackLayout>
+                </Frame>
 
-            <Label x:Name="lbl_res" 
-                   LineBreakMode="WordWrap"/>
+                <!-- Entrada de cidade -->
+                <Frame BorderColor="#CCCCCC" CornerRadius="10" Padding="5" HasShadow="False">
+                    <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
+                        <Label Text="🏙️" FontSize="20" VerticalOptions="Center" />
+                        <Entry x:Name="txt_cidade" 
+                               Placeholder="Enter city name..."
+                               Keyboard="Text"
+                               VerticalOptions="Center"
+                               HorizontalOptions="FillAndExpand" />
+                    </HorizontalStackLayout>
+                </Frame>
+                
+                <Button Text="🔍 Search Weather" 
+                        Clicked="OnSearchClicked"
+                        BackgroundColor="#4A90E2"
+                        TextColor="White"
+                        FontAttributes="Bold"
+                        CornerRadius="10"
+                        HeightRequest="50"
+                        HorizontalOptions="FillAndExpand" />
 
-        </VerticalStackLayout>
-    </ScrollView>
+                <!-- Card de informações do clima -->
+                <Frame x:Name="weatherCard"
+                       BackgroundColor="#F5F5F5"
+                       CornerRadius="15"
+                       Padding="20"
+                       HasShadow="True"
+                       IsVisible="False">
+                    
+                    <VerticalStackLayout Spacing="15">
+                        <!-- Temperatura principal -->
+                        <Label x:Name="lblMainTemp"
+                               FontSize="48"
+                               FontAttributes="Bold"
+                               HorizontalOptions="Center"
+                               TextColor="#333333" />
+                        
+                        <Label x:Name="lblDescription"
+                               FontSize="20"
+                               HorizontalOptions="Center"
+                               TextColor="#666666" />
+
+                        <BoxView HeightRequest="1" Color="#DDDDDD" Margin="0,10" />
+
+                        <!-- Grid de detalhes -->
+                        <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="15" RowSpacing="15">
+                            
+                            <!-- Min/Max Temp -->
+                            <Frame Grid.Row="0" Grid.Column="0" BackgroundColor="White" CornerRadius="10" Padding="15" HasShadow="True">
+                                <VerticalStackLayout HorizontalOptions="Center">
+                                    <Label Text="🌡️ Max" FontSize="14" HorizontalOptions="Center" />
+                                    <Label x:Name="lblTempMax" FontSize="18" FontAttributes="Bold" HorizontalOptions="Center" TextColor="#E74C3C" />
+                                </VerticalStackLayout>
+                            </Frame>
+                            
+                            <Frame Grid.Row="0" Grid.Column="1" BackgroundColor="White" CornerRadius="10" Padding="15" HasShadow="True">
+                                <VerticalStackLayout HorizontalOptions="Center">
+                                    <Label Text="🌡️ Min" FontSize="14" HorizontalOptions="Center" />
+                                    <Label x:Name="lblTempMin" FontSize="18" FontAttributes="Bold" HorizontalOptions="Center" TextColor="#3498DB" />
+                                </VerticalStackLayout>
+                            </Frame>
+
+                            <!-- Vento -->
+                            <Frame Grid.Row="1" Grid.Column="0" BackgroundColor="White" CornerRadius="10" Padding="15" HasShadow="True">
+                                <VerticalStackLayout HorizontalOptions="Center">
+                                    <Label Text="💨 Wind" FontSize="14" HorizontalOptions="Center" />
+                                    <Label x:Name="lblWindSpeed" FontSize="18" FontAttributes="Bold" HorizontalOptions="Center" TextColor="#9B59B6" />
+                                </VerticalStackLayout>
+                            </Frame>
+
+                            <!-- Visibilidade -->
+                            <Frame Grid.Row="1" Grid.Column="1" BackgroundColor="White" CornerRadius="10" Padding="15" HasShadow="True">
+                                <VerticalStackLayout HorizontalOptions="Center">
+                                    <Label Text="👁️ Visibility" FontSize="14" HorizontalOptions="Center" />
+                                    <Label x:Name="lblVisibility" FontSize="18" FontAttributes="Bold" HorizontalOptions="Center" TextColor="#1ABC9C" />
+                                </VerticalStackLayout>
+                            </Frame>
+
+                            <!-- Nascer do Sol -->
+                            <Frame Grid.Row="2" Grid.Column="0" BackgroundColor="White" CornerRadius="10" Padding="15" HasShadow="True">
+                                <VerticalStackLayout HorizontalOptions="Center">
+                                    <Label Text="🌅 Sunrise" FontSize="14" HorizontalOptions="Center" />
+                                    <Label x:Name="lblSunrise" FontSize="16" FontAttributes="Bold" HorizontalOptions="Center" TextColor="#F39C12" />
+                                </VerticalStackLayout>
+                            </Frame>
+
+                            <!-- Pôr do Sol -->
+                            <Frame Grid.Row="2" Grid.Column="1" BackgroundColor="White" CornerRadius="10" Padding="15" HasShadow="True">
+                                <VerticalStackLayout HorizontalOptions="Center">
+                                    <Label Text="🌇 Sunset" FontSize="14" HorizontalOptions="Center" />
+                                    <Label x:Name="lblSunset" FontSize="16" FontAttributes="Bold" HorizontalOptions="Center" TextColor="#E67E22" />
+                                </VerticalStackLayout>
+                            </Frame>
+                        </Grid>
+
+                        <!-- Coordenadas -->
+                        <Label x:Name="lblCoordinates"
+                               FontSize="12"
+                               HorizontalOptions="Center"
+                               TextColor="#999999"
+                               Margin="0,10,0,0" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Histórico de cidades -->
+                <Frame x:Name="historyFrame"
+                       BackgroundColor="#FAFAFA"
+                       CornerRadius="10"
+                       Padding="15"
+                       HasShadow="False"
+                       IsVisible="False">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="📜 Recent Searches" 
+                               FontSize="16" 
+                               FontAttributes="Bold"
+                               TextColor="#333333" />
+                        <FlexLayout x:Name="historyLayout"
+                                    Wrap="Wrap"
+                                    JustifyContent="Start"
+                                    AlignItems="Start"
+                                    AlignContent="Start"
+                                    BindableLayout.ItemsSource="{x:Static MainPage.CityHistory}"
+                                    BindableLayout.ItemTemplate="{StaticResource CityChipTemplate}" />
+                    </VerticalStackLayout>
+                </Frame>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </RefreshView>
 
 </ContentPage>
