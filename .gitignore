@@ -1,1 +1,62 @@
-Nothing needs to be added to .gitignore since only a README.md file was modified and there are no build artifacts, dependencies, or temporary files in the changes.
+```
+# Build artifacts
+*.dll
+*.exe
+*.pdb
+*.so
+*.dylib
+*.aar
+*.jar
+*.war
+*.class
+obj/
+bin/
+Debug/
+Release/
+x64/
+x86/
+arm64/
+arm/
+
+# Dependencies
+packages/
+node_modules/
+vendor/
+
+# IDE files
+.vs/
+.vscode/
+.idea/
+*.userprefs
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# OS files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Icon?
+desktop.ini
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.local
+*.env.*
+
+# Temporary files
+*.tmp
+*.temp
+*~
+.swp
+.swo
+
+# MAUI specific
+MauiAppTempoAgora/bin/
+MauiAppTempoAgora/obj/
+MauiAppTempoAgora/android/
+```
