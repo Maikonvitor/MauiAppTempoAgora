@@ -42,8 +42,14 @@ namespace MauiAppTempoAgora
             }
 
             IsRefreshing = true;
-            await SearchWeatherAsync();
-            IsRefreshing = false;
+            try
+            {
+                await SearchWeatherAsync();
+            }
+            finally
+            {
+                IsRefreshing = false;
+            }
         }
 
         private void LoadCityHistory()
