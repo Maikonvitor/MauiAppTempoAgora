@@ -19,6 +19,7 @@ namespace MauiAppTempoAgora
             // Register HttpClient and WeatherService
             builder.Services.AddSingleton<HttpClient>();
             builder.Services.AddSingleton<IWeatherService, WeatherService>();
+            builder.Services.AddSingleton<MainPage>();
 
 #if DEBUG
             builder.Logging.AddDebug();
