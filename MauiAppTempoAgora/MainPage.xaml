@@ -156,13 +156,13 @@
                                FontSize="16" 
                                FontAttributes="Bold"
                                TextColor="#333333" />
-                        <FlexLayout x:Name="historyLayout"
-                                    Wrap="Wrap"
-                                    JustifyContent="Start"
-                                    AlignItems="Start"
-                                    AlignContent="Start"
-                                    BindableLayout.ItemsSource="{x:Static MainPage.CityHistory}"
-                                    BindableLayout.ItemTemplate="{StaticResource CityChipTemplate}" />
+                         <FlexLayout x:Name="historyLayout"
+                                     Wrap="Wrap"
+                                     JustifyContent="Start"
+                                     AlignItems="Start"
+                                     AlignContent="Start"
+                                     BindableLayout.ItemsSource="{Binding CityHistoryCollection}"
+                                     BindableLayout.ItemTemplate="{StaticResource CityChipTemplate}" />
                     </VerticalStackLayout>
                 </Frame>
 

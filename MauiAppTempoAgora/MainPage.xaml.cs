@@ -8,6 +8,8 @@ namespace MauiAppTempoAgora
     {
         private readonly IWeatherService _weatherService;
         public static ObservableCollection<string> CityHistory { get; } = new ObservableCollection<string>();
+        public ObservableCollection<string> CityHistoryCollection => CityHistory;
+        public Command RefreshCommand { get; }
         
         private bool _isRefreshing;
         public bool IsRefreshing
@@ -25,9 +27,29 @@ namespace MauiAppTempoAgora
             InitializeComponent();
             _weatherService = weatherService;
             BindingContext = this;
+            RefreshCommand = new Command(async () => await RefreshWeatherAsync());
             
             // Carregar histórico salvo
             LoadCityHistory();
+        }
+
+        private async Task RefreshWeatherAsync()
+        {
+            if (string.IsNullOrWhiteSpace(txt_cidade.Text))
+            {
+                IsRefreshing = false;
+                return;
+            }
+
+            IsRefreshing = true;
+            try
+            {
+                await SearchWeatherAsync();
+            }
+            finally
+            {
+                IsRefreshing = false;
+            }
         }
 
         private void LoadCityHistory()
@@ -64,6 +86,11 @@ namespace MauiAppTempoAgora
         }
 
         private async void OnSearchClicked(object sender, EventArgs e)
+        {
+            await SearchWeatherAsync();
+        }
+
+        private async Task SearchWeatherAsync()
         {
             try
             {
@@ -146,7 +173,7 @@ namespace MauiAppTempoAgora
                         if (placemark != null && !string.IsNullOrEmpty(placemark.Locality))
                         {
                             txt_cidade.Text = placemark.Locality;
-                            OnSearchClicked(sender, e);
+                            await SearchWeatherAsync();
                         }
                         else
                         {
@@ -198,7 +225,7 @@ namespace MauiAppTempoAgora
             if (sender is Button chipButton && chipButton.BindingContext is string city)
             {
                 txt_cidade.Text = city;
-                OnSearchClicked(sender, e);
+                await SearchWeatherAsync();
             }
         }
     }
