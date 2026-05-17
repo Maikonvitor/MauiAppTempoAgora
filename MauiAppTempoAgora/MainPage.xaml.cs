@@ -27,6 +27,7 @@ namespace MauiAppTempoAgora
             _weatherService = weatherService;
             BindingContext = this;
             RefreshCommand = new Command(async () => await RefreshWeatherAsync());
+            BindableLayout.SetItemsSource(historyLayout, CityHistory);
             
             // Carregar histórico salvo
             LoadCityHistory();
