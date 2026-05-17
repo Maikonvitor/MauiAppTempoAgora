@@ -8,6 +8,7 @@ namespace MauiAppTempoAgora
     {
         private readonly IWeatherService _weatherService;
         public static ObservableCollection<string> CityHistory { get; } = new ObservableCollection<string>();
+        public ObservableCollection<string> CityHistoryCollection => CityHistory;
         public Command RefreshCommand { get; }
         
         private bool _isRefreshing;
@@ -27,7 +28,6 @@ namespace MauiAppTempoAgora
             _weatherService = weatherService;
             BindingContext = this;
             RefreshCommand = new Command(async () => await RefreshWeatherAsync());
-            BindableLayout.SetItemsSource(historyLayout, CityHistory);
             
             // Carregar histórico salvo
             LoadCityHistory();

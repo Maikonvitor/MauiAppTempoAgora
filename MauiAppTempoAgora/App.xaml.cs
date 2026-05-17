@@ -8,7 +8,7 @@ namespace MauiAppTempoAgora
         public App(IServiceProvider serviceProvider)
         {
             InitializeComponent();
-            MainPage = serviceProvider.GetRequiredService<MainPage>();
+            MainPage = serviceProvider.GetRequiredService<AppShell>();
         }
     }
 }

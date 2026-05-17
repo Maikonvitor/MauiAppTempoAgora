@@ -161,6 +161,7 @@
                                      JustifyContent="Start"
                                      AlignItems="Start"
                                      AlignContent="Start"
+                                     BindableLayout.ItemsSource="{Binding CityHistoryCollection}"
                                      BindableLayout.ItemTemplate="{StaticResource CityChipTemplate}" />
                     </VerticalStackLayout>
                 </Frame>
