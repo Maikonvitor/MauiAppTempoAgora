@@ -2,9 +2,10 @@
 {
     public partial class AppShell : Shell
     {
-        public AppShell()
+        public AppShell(MainPage mainPage)
         {
             InitializeComponent();
+            MainShellContent.Content = mainPage;
         }
     }
 }

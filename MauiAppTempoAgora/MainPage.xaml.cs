@@ -1,6 +1,7 @@
 ﻿using MauiAppTempoAgora.Models;
 using MauiAppTempoAgora.Services;
 using System.Collections.ObjectModel;
+using System.Windows.Input;
 
 namespace MauiAppTempoAgora
 {
@@ -8,6 +9,7 @@ namespace MauiAppTempoAgora
     {
         private readonly IWeatherService _weatherService;
         public static ObservableCollection<string> CityHistory { get; } = new ObservableCollection<string>();
+        public ICommand RefreshCommand { get; }
         
         private bool _isRefreshing;
         public bool IsRefreshing
@@ -25,9 +27,22 @@ namespace MauiAppTempoAgora
             InitializeComponent();
             _weatherService = weatherService;
             BindingContext = this;
+            RefreshCommand = new Command(async () => await OnRefreshAsync());
             
             // Carregar histórico salvo
             LoadCityHistory();
+        }
+
+        private async Task OnRefreshAsync()
+        {
+            try
+            {
+                await SearchWeatherAsync(showEmptyCityAlert: false);
+            }
+            finally
+            {
+                IsRefreshing = false;
+            }
         }
 
         private void LoadCityHistory()
@@ -64,6 +79,9 @@ namespace MauiAppTempoAgora
         }
 
         private async void OnSearchClicked(object sender, EventArgs e)
+            => await SearchWeatherAsync();
+
+        private async Task SearchWeatherAsync(bool showEmptyCityAlert = true)
         {
             try
             {
@@ -77,7 +95,10 @@ namespace MauiAppTempoAgora
 
                 if (string.IsNullOrEmpty(city))
                 {
-                    await DisplayAlert("Warning", "Please enter a city name.", "OK");
+                    if (showEmptyCityAlert)
+                    {
+                        await DisplayAlert("Warning", "Please enter a city name.", "OK");
+                    }
                     return;
                 }
 
@@ -146,7 +167,7 @@ namespace MauiAppTempoAgora
                         if (placemark != null && !string.IsNullOrEmpty(placemark.Locality))
                         {
                             txt_cidade.Text = placemark.Locality;
-                            OnSearchClicked(sender, e);
+                            await SearchWeatherAsync();
                         }
                         else
                         {
@@ -198,7 +219,7 @@ namespace MauiAppTempoAgora
             if (sender is Button chipButton && chipButton.BindingContext is string city)
             {
                 txt_cidade.Text = city;
-                OnSearchClicked(sender, e);
+                await SearchWeatherAsync();
             }
         }
     }

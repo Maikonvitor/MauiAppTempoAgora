@@ -16,9 +16,11 @@ namespace MauiAppTempoAgora
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
-            // Register HttpClient and WeatherService
+            // Register app services and pages
             builder.Services.AddSingleton<HttpClient>();
             builder.Services.AddSingleton<IWeatherService, WeatherService>();
+            builder.Services.AddSingleton<MainPage>();
+            builder.Services.AddSingleton<AppShell>();
 
 #if DEBUG
             builder.Logging.AddDebug();
